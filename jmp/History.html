@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>History Quiz</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f0f0f0;
+    }
+    .container {
+      max-width: 800px;
+      margin: 20px auto;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    h1, h2 {
+      text-align: center;
+    }
+    .question {
+      margin-bottom: 20px;
+    }
+    .options label {
+      display: block;
+      margin-bottom: 10px;
+    }
+    .options input[type="radio"] {
+      margin-right: 10px;
+    }
+    .btn {
+      display: block;
+      width: 100px;
+      margin: 20px auto;
+      padding: 10px;
+      background-color: #007bff;
+      color: #fff;
+      text-align: center;
+      text-decoration: none;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .btn:hover {
+      background-color: #0056b3;
+    }
+    .timer {
+      text-align: right;
+      font-size: 18px;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>History Quiz</h1>
+  <div class="timer" id="timer">Time Remaining: 05:00</div>
+  <div class="quiz" id="quiz">
+    <div class="question">
+      <h2>Question 1: Who was the first president of the United States?</h2>
+      <div class="options">
+        <label><input type="radio" name="q1" value="a"> George Washington</label>
+        <label><input type="radio" name="q1" value="b"> Thomas Jefferson</label>
+        <label><input type="radio" name="q1" value="c"> Abraham Lincoln</label>
+        <label><input type="radio" name="q1" value="d"> John Adams</label>
+      </div>
+    </div>
+    <div class="question">
+      <h2>Question 2: In which year did World War I begin?</h2>
+      <div class="options">
+        <label><input type="radio" name="q2" value="a"> 1914</label>
+        <label><input type="radio" name="q2" value="b"> 1918</label>
+        <label><input type="radio" name="q2" value="c"> 1939</label>
+        <label><input type="radio" name="q2" value="d"> 1945</label>
+      </div>
+    </div>
+    <div class="question">
+      <h2>Question 3: Who wrote the famous book "The Prince"?</h2>
+      <div class="options">
+        <label><input type="radio" name="q3" value="a"> Niccolò Machiavelli</label>
+        <label><input type="radio" name="q3" value="b"> Leonardo da Vinci</label>
+        <label><input type="radio" name="q3" value="c"> William Shakespeare</label>
+        <label><input type="radio" name="q3" value="d"> Galileo Galilei</label>
+      </div>
+    </div>
+    <div class="question">
+      <h2>Question 4: Which ancient civilization built the pyramids?</h2>
+      <div class="options">
+        <label><input type="radio" name="q4" value="a"> Ancient Greece</label>
+        <label><input type="radio" name="q4" value="b"> Ancient Egypt</label>
+        <label><input type="radio" name="q4" value="c"> Ancient Rome</label>
+        <label><input type="radio" name="q4" value="d"> Mesopotamia</label>
+      </div>
+    </div>
+    <div class="question">
+      <h2>Question 5: Who was the first emperor of Rome?</h2>
+      <div class="options">
+        <label><input type="radio" name="q5" value="a"> Julius Caesar</label>
+        <label><input type="radio" name="q5" value="b"> Augustus</label>
+        <label><input type="radio" name="q5" value="c"> Nero</label>
+        <label><input type="radio" name="q5" value="d"> Caligula</label>
+      </div>
+    </div>
+  </div>
+  <button class="btn" onclick="gradeQuiz()">Submit</button>
+</div>
+
+<script>
+  var correctAnswers = {
+    q1: "a",
+    q2: "a",
+    q3: "a",
+    q4: "b",
+    q5: "b"
+  };
+
+  var timer = 300; // 5 minutes in seconds
+  var interval = setInterval(function() {
+    var minutes = Math.floor(timer / 60);
+    var seconds = timer % 60;
+    document.getElementById('timer').innerText = 'Time Remaining: ' + (minutes < 10 ? '0' : '') + minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
+    if (timer === 0) {
+      clearInterval(interval);
+      document.getElementById('quiz').innerHTML = '<h2>Time\'s up!</h2>';
+      document.querySelector('.btn').style.display = 'none';
+    } else {
+      timer--;
+    }
+  }, 1000);
+
+  function gradeQuiz() {
+    clearInterval(interval); // Stop the timer
+    var totalQuestions = Object.keys(correctAnswers).length;
+    var score = 0;
+
+    var correctAnswersHTML = '<h2>Correct Answers:</h2><ul>';
+
+    for (var i = 1; i <= totalQuestions; i++) {
+      var radios = document.getElementsByName('q' + i);
+      var userAnswer = null;
+
+      for (var j = 0; j < radios.length; j++) {
+        if (radios[j].checked) {
+          userAnswer = radios[j].value;
+          break;
+        }
+      }
+
+      if (userAnswer === correctAnswers['q' + i]) {
+        score++;
+        correctAnswersHTML += '<li>Question ' + i + ': <span class="answer">Correct</span></li>';
+      } else {
+        correctAnswersHTML += '<li>Question ' + i + ': <span class="answer">Incorrect</span> (Correct answer: ' + correctAnswers['q' + i] + ')</li>';
+      }
+    }
+
+    correctAnswersHTML += '</ul>';
+
+    var resultHTML = '<h2>Your score: ' + score + ' out of ' + totalQuestions + '</h2>';
+
+    document.getElementById('quiz').innerHTML += correctAnswersHTML;
+    document.getElementById('quiz').innerHTML += resultHTML;
+  }
+</script>
+
+</body>
+</html>

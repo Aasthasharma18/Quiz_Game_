@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Geography Quiz</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f0f0f0;
+    }
+    .container {
+      max-width: 800px;
+      margin: 20px auto;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    h1, h2 {
+      text-align: center;
+    }
+    .question {
+      margin-bottom: 20px;
+    }
+    .options label {
+      display: block;
+      margin-bottom: 10px;
+    }
+    .options input[type="radio"] {
+      margin-right: 10px;
+    }
+    .btn {
+      display: block;
+      width: 100px;
+      margin: 20px auto;
+      padding: 10px;
+      background-color: #007bff;
+      color: #fff;
+      text-align: center;
+      text-decoration: none;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .btn:hover {
+      background-color: #0056b3;
+    }
+    .timer {
+      text-align: right;
+      font-size: 18px;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Geography Quiz</h1>
+  <div class="timer" id="timer">Time Remaining: 05:00</div>
+  <div class="quiz" id="quiz">
+    <div class="question">
+      <h2>Question 1: What is the capital of France?</h2>
+      <div class="options">
+        <label><input type="radio" name="q1" value="a"> London</label>
+        <label><input type="radio" name="q1" value="b"> Paris</label>
+        <label><input type="radio" name="q1" value="c"> Rome</label>
+        <label><input type="radio" name="q1" value="d"> Berlin</label>
+      </div>
+    </div>
+    <div class="question">
+      <h2>Question 2: Which country is known as the Land of the Rising Sun?</h2>
+      <div class="options">
+        <label><input type="radio" name="q2" value="a"> China</label>
+        <label><input type="radio" name="q2" value="b"> Japan</label>
+        <label><input type="radio" name="q2" value="c"> India</label>
+        <label><input type="radio" name="q2" value="d"> South Korea</label>
+      </div>
+    </div>
+    <div class="question">
+      <h2>Question 3: What is the largest continent by land area?</h2>
+      <div class="options">
+        <label><input type="radio" name="q3" value="a"> Africa</label>
+        <label><input type="radio" name="q3" value="b"> Europe</label>
+        <label><input type="radio" name="q3" value="c"> Asia</label>
+        <label><input type="radio" name="q3" value="d"> North America</label>
+      </div>
+    </div>
+    <div class="question">
+      <h2>Question 4: What is the capital of Australia?</h2>
+      <div class="options">
+        <label><input type="radio" name="q4" value="a"> Sydney</label>
+        <label><input type="radio" name="q4" value="b"> Canberra</label>
+        <label><input type="radio" name="q4" value="c"> Melbourne</label>
+        <label><input type="radio" name="q4" value="d"> Perth</label>
+      </div>
+    </div>
+    <div class="question">
+      <h2>Question 5: What is the longest river in the world?</h2>
+      <div class="options">
+        <label><input type="radio" name="q5" value="a"> Amazon</label>
+        <label><input type="radio" name="q5" value="b"> Nile</label>
+        <label><input type="radio" name="q5" value="c"> Yangtze</label>
+        <label><input type="radio" name="q5" value="d"> Mississippi</label>
+      </div>
+    </div>
+  </div>
+  <button class="btn" onclick="gradeQuiz()">Submit</button>
+</div>
+
+<script>
+  var correctAnswers = {
+    q1: "b",
+    q2: "b",
+    q3: "c",
+    q4: "b",
+    q5: "b"
+  };
+
+  var timer = 300; // 5 minutes in seconds
+  var interval = setInterval(function() {
+    var minutes = Math.floor(timer / 60);
+    var seconds = timer % 60;
+    document.getElementById('timer').innerText = 'Time Remaining: ' + (minutes < 10 ? '0' : '') + minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
+    if (timer === 0) {
+      clearInterval(interval);
+      document.getElementById('quiz').innerHTML = '<h2>Time\'s up!</h2>';
+      document.querySelector('.btn').style.display = 'none';
+    } else {
+      timer--;
+    }
+  }, 1000);
+
+  function gradeQuiz() {
+    clearInterval(interval); // Stop the timer
+    var totalQuestions = Object.keys(correctAnswers).length;
+    var score = 0;
+
+    var correctAnswersHTML = '<h2>Correct Answers:</h2><ul>';
+
+    for (var i = 1; i <= totalQuestions; i++) {
+      var radios = document.getElementsByName('q' + i);
+      var userAnswer = null;
+
+      for (var j = 0; j < radios.length; j++) {
+        if (radios[j].checked) {
+          userAnswer = radios[j].value;
+          break;
+        }
+      }
+
+      if (userAnswer === correctAnswers['q' + i]) {
+        score++;
+        correctAnswersHTML += '<li>Question ' + i + ': <span class="answer">Correct</span></li>';
+      } else {
+        correctAnswersHTML += '<li>Question ' + i + ': <span class="answer">Incorrect</span> (Correct answer: ' + correctAnswers['q' + i] + ')</li>';
+      }
+    }
+
+    correctAnswersHTML += '</ul>';
+
+    var resultHTML = '<h2>Your score: ' + score + ' out of ' + totalQuestions + '</h2>';
+
+    document.getElementById('quiz').innerHTML += correctAnswersHTML;
+    document.getElementById('quiz').innerHTML += resultHTML;
+  }
+</script>
+
+</body>
+</html>
